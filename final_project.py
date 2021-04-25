@@ -86,6 +86,11 @@ def whether_same_category(row):
     y = row["category" + "_r"].lower()
     return(x == y)
 
+def whether_same_title(row):
+    x = row["title" + "_l"].lower()
+    y = row["title" + "_r"].lower()
+    return(x == y)
+
 def similarity(row, attr):
     if(attr != "price"):
         x = set(row[attr + "_l"].lower().split())
@@ -93,8 +98,6 @@ def similarity(row, attr):
         result = len(x.intersection(y)) / max(len(x), len(y))
     if(attr == "price"):
         result = int(price_difference_high(row))
-    if(attr == "category"):
-        result = whether_same_category(row)
     return result
  #jaccard_similarity for "title", "brand", "modelno",  price_difference_high for "price", whether_same_category for "category" 
 
@@ -112,7 +115,7 @@ from sklearn import preprocessing
 
 def feature_engineering(LR):
     LR = LR.astype(str)
-    attrs = ["title", "category", "brand", "modelno", "price"]
+    attrs = ["title", "brand", "modelno", "price"]  #change
     features = []
     for attr in attrs:
         j_sim = LR.apply(similarity, attr=attr, axis=1)
@@ -133,6 +136,7 @@ training_label = train.label.values
 # 4. Model training and prediction
 from sklearn.ensemble  import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 
@@ -159,6 +163,10 @@ matching_pairs_in_training = set(list(map(tuple, matching_pairs_in_training.valu
 
 pred_pairs = [pair for pair in matching_pairs if
               pair not in matching_pairs_in_training]  # remove the matching pairs already in training
+Ref = [pair for pair in matching_pairs if
+              pair in matching_pairs_in_training]  # remove the matching pairs already in training
+print(len(Ref))
+print(len(pred_pairs))
 pred_pairs = np.array(pred_pairs)
 pred_df = pd.DataFrame(pred_pairs, columns=["ltable_id", "rtable_id"])
 pred_df.to_csv("output.csv", index=False)
