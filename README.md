@@ -1,7 +1,8 @@
 # Entity_Matching
-This is the final project for CS 4400-X, SPRING 2021.
+This is the final project for CS 4400-X, Spring 2021.
 
 #Task description
+
   You are given two tables (left table and right table) of electronic products. Each table is from a
 different shopping website. Each row in a table represents a product instance. For every pair of
 tuples (Li;Rj), where Li is a tuple in the left table and Rj is a tuple in the right table, it is either
